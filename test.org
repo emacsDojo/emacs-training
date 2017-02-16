@@ -1,0 +1,85 @@
+#+TITLE: Examples: tables and babel
+#+OPTIONS: author:bzg email:bzg@bzg.fr
+
+* Tables
+
+A table with simple column formulas.
+
+| Aurélie | Géraldine | Sum       |            Mean |
+|---------+-----------+-----------+-----------------|
+|      16 |        15 |        31 |            15.5 |
+|---------+-----------+-----------+-----------------|
+|      19 |         8 |        27 |            13.5 |
+|     one |       two | one + two | (one + two) / 2 |
+#+TBLFM: $3=$1+$2::$4=vmean($1..$2)
+
+A table with an Emacs Lisp formulas.
+
+| Aurélie | Géraldine | Mean      |
+|---------+-----------+-----------|
+|      16 |        15 | 16 15     |
+|---------+-----------+-----------|
+|     293 |        38 | 293 38    |
+|   alice |       bob | alice bob |
+#+TBLFM: $3='(format "%s %s" "$1" "$2");L
+
+(Note that $1 and $2 must be quoted to be read as strings.)
+
+A table manipulating time values.
+
+#+NAME: mytable2
+|  Task 1 |   Task 2 |    Total |
+|---------+----------+----------|
+|    2:12 |     1:49 | 04:01:00 |
+| 3:02:20 | -2:07:00 |     0.92 |
+#+TBLFM: @2$3=$1+$2;T::@3$3=$1+$2;t
+
+* Babel
+
+I type some prose here.
+
+#+begin_src python :tangle my_python_file.py
+#!/usr/bin/env python
+
+print "This is my python file."
+#+end_src
+
+#+begin_src python :tangle my_python_file.py
+print "Another string."
+#+end_src
+
+Try C-c C-c on the next block:
+
+#+HEADER: 
+#+NAME: elisp test
+#+BEGIN_SRC emacs-lisp :tangle test2.el
+(progn
+  (+ 2 10)
+  (message "wat?!"))
+#+END_SRC
+
+#+RESULTS: elisp test
+: wat?!
+
+Try C-c C-c on the next block:
+
+#+HEADERS: :var data1=1
+#+BEGIN_SRC emacs-lisp :var data2=2 :tangle test2.el
+(message "data1:%S, data2:%S" data1 data2)
+#+END_SRC
+
+#+RESULTS:
+: data1:1, data2:2
+
+* Example dynamic block
+
+Try clocking in on a headline with C-c C-x C-i.
+
+Then update the dynamic block below with C-c C-c :
+
+#+BEGIN: clocktable :maxlevel 2 :scope file
+#+CAPTION: Clock summary at [2016-07-30 sam. 18:04]
+| Headline   | Time |
+|------------+------|
+| *Total time* | *0:00* |
+#+END:
